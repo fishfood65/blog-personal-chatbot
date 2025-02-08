@@ -1,9 +1,11 @@
+import huggingface_hub
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
 import os
 import pandas as pd
+import PyPDF2
 
-st.title("📝 File Q&A with HuggingFace")
+st.title("🐾 Pet Sitting Runbook Generator with HuggingFace")
 
 # Get the HuggingFace API key from environment variable
 hf_api_key = os.getenv("HF_TOKEN")
@@ -14,29 +16,39 @@ with st.sidebar:
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
 # Allow multiple file uploads (between 1 and 10 files) including CSV, TXT, and MD
-uploaded_files = st.file_uploader("Upload articles", type=("txt", "md", "csv"), accept_multiple_files=True)
+# Function to upload and save user files
+def upload_and_save_files():
+    user_files = st.file_uploader("Upload pet care files (1-10 files)", type=["pdf", "docx", "txt", "md", "csv"], accept_multiple_files=True)
+    if user_files:
+        for file in user_files:
+            filename = file.name
+            with open(os.path.join("uploaded_files", filename), "wb") as f:
+                f.write(file.getvalue())
+        st.success("Files uploaded and saved successfully!")
 
-# Check if the number of files uploaded is between 12 and 10
-if uploaded_files:
-    if len(uploaded_files) < 1 or len(uploaded_files) > 10:
-        st.warning("Please upload between 1 and 10 files.")
-    else:
-        st.write(f"Uploaded {len(uploaded_files)} files.")
-else:
-    st.warning("Please upload between 1 and 10 files.")
+def read_system_input():
+    pdf_file = open("system_input.pdf", "rb")
+    pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+    system_info = ""
+    for page in range(pdf_reader.numPages):
+        system_info += pdf_reader.getPage(page).extractText()
+    pdf_file.close()
+    return system_info
 
-# Question input
-question = st.text_input(
-    "Ask something about the articles",
-    placeholder="Can you give me a short summary?",
-    disabled=not uploaded_files,
-)
+# Upload user files
+upload_and_save_files()
 
-# Check if the API key is missing
-if uploaded_files and question and not hf_api_key:
-    st.info("Please add your HuggingFace API key to the environment variables to continue.")
+# Read system input file
+system_info = read_system_input()
 
-import pandas as pd
+# Display user and system inputs
+st.subheader("User Inputs")
+uploaded_files = os.listdir("uploaded_files")
+for file in uploaded_files:
+    st.write(file)
+
+st.subheader("System Input")
+st.write(system_info)
 
 # Function to process CSV file content
 def process_csv(file):
@@ -59,39 +71,56 @@ def process_csv(file):
         )
         return combined_text
 
-# If both files, question, and API key are provided
-if uploaded_files and question and hf_api_key:
-    combined_article = ""
-    
-    # Combine the content of all uploaded files
-    for file in uploaded_files:
-        file_type = file.name.split('.')[-1]
+# Generate AI prompt and get user confirmation
+with st.expander("AI Prompt Preview"):
+    user_confirmation = st.checkbox("Show AI Prompt")
+    if user_confirmation:
+        prompt = f"""
+        Generate a comprehensive pet sitting runbook based on the following user and system inputs:
         
-        if file_type == 'csv':
-            # Process CSV files
-            combined_article += process_csv(file)
-        else:
-            # Process text and markdown files
-            combined_article += file.read().decode()
+        User Inputs:
+        {uploaded_files}
         
-        combined_article += "\n\n"  # Separate articles with a newline for clarity
+        System Input(from PDF):
+        {system_info}
+        
+        Instructions:
+        - Create a detailed runbook tailored to the user's pets.
+        - Include sections for basic information, health, feeding, grooming, daily routine, and emergency contacts.
+        - Adapt the runbook based on the number and types of pets provided.
+        
+        Output Format:
+        - Use a clear structure with headings for each pet.
+        - Provide a weekly schedule, feeding instructions, and individual care routines.
+        
+        Example User Input:
+        - Pet 1:
+          - Name: Fluffy
+          - Type: Cat
+          - ...
+        
+        Example System Input:
+        [System input content]
+        
+        Example Output:
+        [Provide an example runbook section here]
+        """
+        st.code(prompt)
 
-    # Set up the HuggingFace model inference using HuggingFaceEndpoint
-    model_id = "mistralai/Mistral-7B-Instruct-v0.3"  # You can replace this with your desired HuggingFace model (e.g., GPT-3, GPT-Neo, etc.)
-    hf = HuggingFaceEndpoint(
-        repo_id=model_id,
-        task="text-generation",  # Specifying the task type as text generation
-        max_new_tokens=100,
-        temperature=0.7,
-        token=hf_api_key,  # Use the API key from the environment variable
-    )
-
-    # Prepare the prompt for the question
-    prompt = f"Here are some articles:\n\n{combined_article}\n\nQuestion: {question}\nAnswer:"
-
-    # Get the response from the model
-    response = hf(prompt)
-
-    # Display the response
-    st.write("### Answer")
-    st.write(response)  # Directly display the string response from the model
+# Generate comprehensive output using Hugging Face API
+if st.button("Generate Runbook"):
+    if user_confirmation:
+        # Use Hugging Face API for model inference
+        hf = huggingface_hub.InferenceEndpoint(
+            repo_id="mistralai/Mistral-Nemo-Instruct-2407",
+            task="text-generation",  # Specifying the task type as text generation
+            max_new_tokens=1500,
+            temperature=0.5,
+            token=hf_api_key,  # Use the API key from the environment variable
+        )
+        response = hf(prompt)
+        output = response[0]["generated_text"]
+        st.success("Runbook generated successfully!")
+        st.write(output)
+    else:
+        st.warning("Please confirm the AI prompt before generating the runbook.")
