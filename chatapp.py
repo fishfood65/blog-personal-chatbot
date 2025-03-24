@@ -85,31 +85,18 @@ def process_csv(file):
 st.subheader("Choose Date(s) or Timeframe")
 st.write ("Choose a Timeframe you would like a runbook generated for.")
 
-# Option to select specific dates
-specific_dates = st.checkbox("Select Specific Dates")
-if specific_dates:
-    start_date = st.date_input("Start Date", datetime.now())
-    end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
+# Define the options
+options = ["specific_dates", "weekdays_only", "weekend_only", "weekly_including_weekends"]
 
-# Option to select weekdays only
-weekdays_only = st.radio("Weekdays Only", options=["Yes", "No"], index=1)  # Default to "No"
+# Create a radio selection
+choice = st.radio("Choose an option:", options)
 
-# Option to select weekends only
-weekends_only = st.radio("Weekends Only", options=["Yes", "No"], index=1)  # Default to "No"
-
-# Option to select weekly including weekends
-weekly_including_weekends = st.radio("Weekly Including Weekends", options=["Yes", "No"], index=1)  # Default to "No"
-
-# Ensure only one choice is allowed
-if (specific_dates and weekdays_only == "Yes" and weekend_only == "Yes" and weekly_including_weekends == "No") or \
-   (specific_dates and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "Yes") or \
-   (specific_dates and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "Yes") or \
-   (specific_dates == "No" and weekdays_only == "Yes" and weekend_only == "Yes" and weekly_including_weekends == "Yes") or \
-   (specific_dates == "Yes" and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "No") or \
-   (specific_dates == "Yes" and weekdays_only == "No" and weekend_only == "Yes" and weekly_including_weekends == "No") or \
-   (specific_dates == "No" and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "Yes"):
-    st.error("Please select only one option for the Timeframe.")
-    st.stop()
+if choice == "specific_dates":
+    start_date = st.date_input("Select Start Date:", datetime.now())
+    end_date = st.date_input("Select End Date:", datetime.now() + timedelta(days=7))
+    st.write(f"You selected specific dates from {start_date} to {end_date}.")
+else:
+    st.write(f"You selected: {choice}.")
 
 # Generate AI prompt and get user confirmation
 with st.expander("AI Prompt Preview"):
