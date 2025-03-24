@@ -4,6 +4,7 @@ from langchain_huggingface import HuggingFaceEndpoint
 import os
 import pandas as pd
 import PyPDF2
+from datetime import datetime, timedelta
 
 st.title("🐾 Pet Sitting Runbook Generator with HuggingFace")
 
@@ -71,6 +72,11 @@ def process_csv(file):
         )
         return combined_text
 
+# Section for date range selection
+st.subheader("Date Range Selection")
+start_date = st.date_input("Start Date", datetime.now())
+end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
+
 # Generate AI prompt and get user confirmation
 with st.expander("AI Prompt Preview"):
     user_confirmation = st.checkbox("Show AI Prompt")
@@ -83,6 +89,8 @@ with st.expander("AI Prompt Preview"):
         
         System Input(from PDF):
         {system_info}
+        
+        Date Range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}
         
         Instructions:
         - Create a detailed runbook tailored to the user's pets.
