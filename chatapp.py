@@ -28,7 +28,7 @@ def upload_and_save_files():
         st.success("Files uploaded and saved successfully!")
 
 # Upload user files
-upload_and_save_files()      
+upload_and_save_files()  
 
 def read_system_input():
     pdf_file = open("Pet Sitting Runbook Template.pdf", "rb")
@@ -43,10 +43,11 @@ def read_system_input():
 system_info = read_system_input()
 
 # Display user and system inputs
-st.subheader("User Inputs")
-uploaded_files = os.listdir("uploaded_files")
-for file in uploaded_files:
-    st.write(file)
+if os.listdir("uploaded_files"):
+    st.subheader("User Inputs")
+    uploaded_files = os.listdir("uploaded_files")
+    for file in uploaded_files:
+        st.write(file)
 
 st.subheader("System Input")
 st.write(system_info)
