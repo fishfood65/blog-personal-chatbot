@@ -94,12 +94,21 @@ if specific_dates:
 # Option to select weekdays only
 weekdays_only = st.radio("Weekdays Only", options=["Yes", "No"], index=1)  # Default to "No"
 
+# Option to select weekends only
+weekends_only = st.radio("Weekends Only", options=["Yes", "No"], index=1)  # Default to "No"
+
 # Option to select weekly including weekends
 weekly_including_weekends = st.radio("Weekly Including Weekends", options=["Yes", "No"], index=1)  # Default to "No"
 
 # Ensure only one choice is allowed
-if (specific_dates and weekdays_only == "Yes" and weekly_including_weekends == "No") or (specific_dates and weekly_including_weekends == "Yes" and weekdays_only == "No") or (specific_dates and weekdays_only == "Yes" and weekly_including_weekends == "Yes"):
-    st.error("Please select only one option for the date range.")
+if (specific_dates and weekdays_only == "Yes" and weekend_only == "Yes" and weekly_including_weekends == "No") or \
+   (specific_dates and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "Yes") or \
+   (specific_dates and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "Yes") or \
+   (specific_dates == "No" and weekdays_only == "Yes" and weekend_only == "Yes" and weekly_including_weekends == "Yes") or \
+   (specific_dates == "Yes" and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "No") or \
+   (specific_dates == "Yes" and weekdays_only == "No" and weekend_only == "Yes" and weekly_including_weekends == "No") or \
+   (specific_dates == "No" and weekdays_only == "Yes" and weekend_only == "No" and weekly_including_weekends == "Yes"):
+    st.error("Please select only one option for the Timeframe.")
     st.stop()
 
 # Generate AI prompt and get user confirmation
