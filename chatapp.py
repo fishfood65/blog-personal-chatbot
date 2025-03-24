@@ -242,7 +242,7 @@ if st.button("Generate Runbook"):
     if user_confirmation:
         # Use Hugging Face API for model inference
         hf = huggingface_hub.InferenceClient(
-            repo_id="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model name
+            model="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model name
             api_key=hf_api_key,
         )
         reponse = hf.text_generation(
