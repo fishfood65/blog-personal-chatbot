@@ -31,7 +31,7 @@ def read_system_input():
     pdf_file = open("Pet Sitting Runbook Template.pdf", "rb")
     pdf_reader = PyPDF2.PdfReader(pdf_file)
     system_info = ""
-    for page in range(pdf_reader.numPages):
+    for page in range(len(pdf_reader.numPages)):
         system_info += pdf_reader.getPage(page).extractText()
     pdf_file.close()
     return system_info
