@@ -242,11 +242,12 @@ if st.button("Generate Runbook"):
     if user_confirmation:
         # Use Hugging Face API for model inference
         hf = huggingface_hub.InferenceEndpoint(
-            repo_id="mistralai/Mistral-Nemo-Instruct-2407",
+            model="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model name
             task="text-generation",  # Specifying the task type as text generation
             max_new_tokens=1500,
             temperature=0.5,
             token=hf_api_key,  # Use the API key from the environment variable
+        )
         )
         response = hf(prompt)
         output = response[0]["generated_text"]
