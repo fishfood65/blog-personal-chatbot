@@ -82,8 +82,8 @@ def process_csv(file):
         return combined_text
 
 # Section for date range selection
-st.subheader("Select Specific Dates")
-st.write ("Select the specific dates you would like a runbook generated for.")
+st.subheader("Choose Date(s) or Timeframe")
+st.write ("Choose a Timeframe you would like a runbook generated for.")
 
 # Option to select specific dates
 specific_dates = st.checkbox("Select Specific Dates")
@@ -92,10 +92,15 @@ if specific_dates:
     end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
 
 # Option to select weekdays only
-weekdays_only = st.checkbox("Weekdays Only")
+weekdays_only = st.radio("Weekdays Only", options=["Yes", "No"], index=1)  # Default to "No"
 
 # Option to select weekly including weekends
-weekly_including_weekends = st.checkbox("Weekly Including Weekends")
+weekly_including_weekends = st.radio("Weekly Including Weekends", options=["Yes", "No"], index=1)  # Default to "No"
+
+# Ensure only one choice is allowed
+if specific_dates + weekdays_only + weekly_including_weekends != 1:
+    st.error("Please select only one option for the date range.")
+    st.stop()
 
 # Generate AI prompt and get user confirmation
 with st.expander("AI Prompt Preview"):
