@@ -248,7 +248,6 @@ if st.button("Generate Runbook"):
             temperature=0.5,
             token=hf_api_key,  # Use the API key from the environment variable
         )
-        )
         response = hf(prompt)
         output = response[0]["generated_text"]
         st.success("Runbook generated successfully!")
