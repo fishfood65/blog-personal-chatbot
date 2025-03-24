@@ -86,7 +86,7 @@ st.subheader("Choose Date(s) or Timeframe")
 st.write ("Choose a Timeframe you would like a runbook generated for.")
 
 # Define the options
-options = ["specific_dates", "weekdays_only", "weekend_only", "weekly_including_weekends"]
+options = ["Pick Dates", "Weekdays Only", "Weekend Only", "Weekly Including Weekends"]
 
 # Create a radio selection
 choice = st.radio("Choose an option:", options)
