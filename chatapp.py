@@ -84,45 +84,147 @@ def process_csv(file):
 # Section for date range selection
 st.subheader("Select Specific Dates")
 st.write ("Select the specific dates you would like a runbook generated for.")
-start_date = st.date_input("Start Date", datetime.now())
-end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
+
+# Option to select specific dates
+specific_dates = st.checkbox("Select Specific Dates")
+if specific_dates:
+    start_date = st.date_input("Start Date", datetime.now())
+    end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
+
+# Option to select weekdays only
+weekdays_only = st.checkbox("Weekdays Only")
+
+# Option to select weekly including weekends
+weekly_including_weekends = st.checkbox("Weekly Including Weekends")
 
 # Generate AI prompt and get user confirmation
 with st.expander("AI Prompt Preview"):
     user_confirmation = st.checkbox("Show AI Prompt")
     if user_confirmation:
-        prompt = f"""
-        Generate a comprehensive pet sitting runbook based on the following user and system inputs:
-        
-        User Inputs:
-        {uploaded_files}
-        
-        System Input(from PDF):
-        {system_info}
-        
-        Date Range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}
-        
-        Instructions:
-        - Create a detailed runbook tailored to the user's pets.
-        - Include sections for basic information, health, feeding, grooming, daily routine, and emergency contacts.
-        - Adapt the runbook based on the number and types of pets provided.
-        
-        Output Format:
-        - Use a clear structure with headings for each pet.
-        - Provide a weekly schedule, feeding instructions, and individual care routines.
-        
-        Example User Input:
-        - Pet 1:
-          - Name: Fluffy
-          - Type: Cat
-          - ...
-        
-        Example System Input:
-        [System input content]
-        
-        Example Output:
-        [Provide an example runbook section here]
-        """
+        if specific_dates:
+            prompt = f"""
+            Generate a comprehensive pet sitting runbook for the selected date range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}.
+            
+            User Inputs:
+            {uploaded_files}
+            
+            System Input(from PDF):
+            {system_info}
+            
+            Instructions:
+            - Create a detailed runbook tailored to the user's pets for the specified dates.
+            - Include sections for basic information, health, feeding, grooming, daily routine, and emergency contacts.
+            - Adapt the runbook based on the number and types of pets provided.
+            
+            Output Format:
+            - Use a clear structure with headings for each pet.
+            - Provide a schedule, feeding instructions, and individual care routines for the selected dates.
+            
+            Example User Input:
+            - Pet 1:
+              - Name: Fluffy
+              - Type: Cat
+              - ...
+            
+            Example System Input:
+            [System input content]
+            
+            Example Output:
+            [Provide an example runbook section for the selected dates here]
+            """
+        elif weekdays_only:
+            prompt = f"""
+            Generate a comprehensive pet sitting runbook for weekdays only.
+            
+            User Inputs:
+            {uploaded_files}
+            
+            System Input(from PDF):
+            {system_info}
+            
+            Instructions:
+            - Create a detailed runbook tailored to the user's pets for weekdays.
+            - Include sections for basic information, health, feeding, grooming, and emergency contacts.
+            - Adapt the runbook based on the number and types of pets.
+            
+            Output Format:
+            - Use a clear structure with headings for each pet.
+            - Provide a weekly schedule, feeding instructions, and individual care routines for weekdays.
+            
+            Example User Input:
+            - Pet 1:
+              - Name: Fluffy
+              - Type: Cat
+              - ...
+            
+            Example System Input:
+            [System input content]
+            
+            Example Output:
+            [Provide an example runbook section for weekdays here]
+            """
+        elif weekly_including_weekends:
+            prompt = f"""
+            Generate a comprehensive pet sitting runbook for a weekly schedule including weekends.
+            
+            User Inputs:
+            {uploaded_files}
+            
+            System Input(from PDF):
+            {system_info}
+            
+            Instructions:
+            - Create a detailed runbook tailored to the user's pets for a week, including weekends.
+            - Include sections for basic information, health, feeding, grooming, daily routine, and emergency contacts.
+            - Adapt the runbook based on the number and types of pets.
+            
+            Output Format:
+            - Use a clear structure with headings for each pet.
+            - Provide a weekly schedule, feeding instructions, and individual care routines for the entire week.
+            
+            Example User Input:
+            - Pet 1:
+              - Name: Fluffy
+              - Type: Cat
+              - ...
+            
+            Example System Input:
+            [System input content]
+            
+            Example Output:
+            [Provide an example runbook section for a week including weekends here]
+            """
+        else:
+            prompt = f"""
+            Generate a comprehensive pet sitting runbook based on the following user and system inputs:
+            
+            User Inputs:
+            {uploaded_files}
+            
+            System Input(from PDF):
+            {system_info}
+            
+            Instructions:
+            - Create a detailed runbook tailored to the user's pets.
+            - Include sections for basic information, health, feeding, grooming, daily routine, and emergency contacts.
+            - Adapt the runbook based on the number and types of pets provided.
+            
+            Output Format:
+            - Use a clear structure with headings for each pet.
+            - Provide a weekly schedule, feeding instructions, and individual care routines.
+            
+            Example User Input:
+            - Pet 1:
+              - Name: Fluffy
+              - Type: Cat
+              - ...
+            
+            Example System Input:
+            [System input content]
+            
+            Example Output:
+            [Provide an example runbook section here]
+            """
         st.code(prompt)
 
 # Generate comprehensive output using Hugging Face API
