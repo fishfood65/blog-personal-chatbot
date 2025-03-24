@@ -98,7 +98,7 @@ weekdays_only = st.radio("Weekdays Only", options=["Yes", "No"], index=1)  # Def
 weekly_including_weekends = st.radio("Weekly Including Weekends", options=["Yes", "No"], index=1)  # Default to "No"
 
 # Ensure only one choice is allowed
-if specific_dates + weekdays_only + weekly_including_weekends != 1:
+if specific_dates and weekdays_only == "Yes" and weekly_including_weekends =="Yes":
     st.error("Please select only one option for the date range.")
     st.stop()
 
