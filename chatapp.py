@@ -27,7 +27,11 @@ def upload_and_save_files():
                 f.write(file.getvalue())
         st.success("Files uploaded and saved successfully!")
 
-# Upload user files
+# Create the "uploaded_files" directory if it doesn't exist
+if not os.path.exists("uploaded_files"):
+    os.makedirs("uploaded_files")
+
+# Wait for user to upload files
 upload_and_save_files()  
 
 def read_system_input():
