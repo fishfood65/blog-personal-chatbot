@@ -57,8 +57,8 @@ if os.listdir("uploaded_files"):
     for file in uploaded_files:
         st.write(file)
 
-st.subheader("System Input")
-st.write(system_info)
+# st.subheader("System Input")
+# st.write(system_info)
 
 # Function to process CSV file content
 def process_csv(file):
