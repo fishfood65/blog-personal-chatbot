@@ -91,7 +91,7 @@ options = ["Pick Dates", "Weekdays Only", "Weekend Only", "Weekly Including Week
 # Create a radio selection
 choice = st.radio("Choose an option:", options)
 
-if choice == "specific_dates":
+if choice == "Pick Dates":
     start_date = st.date_input("Select Start Date:", datetime.now())
     end_date = st.date_input("Select End Date:", datetime.now() + timedelta(days=7))
     st.write(f"You selected specific dates from {start_date} to {end_date}.")
