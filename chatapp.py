@@ -32,7 +32,7 @@ def read_system_input():
     pdf_reader = PyPDF2.PdfReader(pdf_file)
     system_info = ""
     for page in range(len(pdf_reader.pages)):
-        system_info += pdf_reader.pages(page).extractText()
+        system_info += pdf_reader.pages[page].extractText()
     pdf_file.close()
     return system_info
 
