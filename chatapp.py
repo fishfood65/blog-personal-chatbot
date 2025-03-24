@@ -16,10 +16,14 @@ with st.sidebar:
     "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/1_File_Q%26A.py)"
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
+# Section Start User Input
 # Allow multiple file uploads (between 1 and 10 files) including CSV, TXT, and MD
 # Function to upload and save user files
+
+st.subheader("Start Sharing Your Pet(s) Information")
+
 def upload_and_save_files():
-    user_files = st.file_uploader("Upload pet care files (1-10 files)", type=["pdf", "docx", "txt", "md", "csv"], accept_multiple_files=True)
+    user_files = st.file_uploader("Upload between 1-10 pet care files.", type=["pdf", "docx", "txt", "md", "csv"], accept_multiple_files=True)
     if user_files:
         for file in user_files:
             filename = file.name
@@ -78,7 +82,8 @@ def process_csv(file):
         return combined_text
 
 # Section for date range selection
-st.subheader("Date Range Selection")
+st.subheader("Select Specific Dates")
+st.write ("Select the specific dates you would like a runbook generated for.")
 start_date = st.date_input("Start Date", datetime.now())
 end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
 
@@ -121,6 +126,9 @@ with st.expander("AI Prompt Preview"):
         st.code(prompt)
 
 # Generate comprehensive output using Hugging Face API
+st.subheader("Runbook Creation")
+st.write ("Click the button to generate your persoanlized Runbook")
+
 if st.button("Generate Runbook"):
     if user_confirmation:
         # Use Hugging Face API for model inference
