@@ -28,7 +28,7 @@ def upload_and_save_files():
         st.success("Files uploaded and saved successfully!")
 
 def read_system_input():
-    pdf_file = open("system_input.pdf", "rb")
+    pdf_file = open("Pet Sitting Runbook Template.pdf", "rb")
     pdf_reader = PyPDF2.PdfFileReader(pdf_file)
     system_info = ""
     for page in range(pdf_reader.numPages):
