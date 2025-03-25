@@ -6,6 +6,7 @@ import pandas as pd
 import PyPDF2
 from datetime import datetime, timedelta
 from fpdf import FPDF
+import io
 
 st.title("🐾 Pet Sitting Runbook Generator with HuggingFace")
 
