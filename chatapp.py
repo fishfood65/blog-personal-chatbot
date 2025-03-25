@@ -1,4 +1,4 @@
-import huggingface_hub
+from huggingface_hub import InferenceClient
 import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint
 import os
@@ -238,30 +238,29 @@ with st.expander("AI Prompt Preview"):
 st.subheader("Runbook Creation")
 st.write ("Click the button to generate your persoanlized Runbook")
 
+from huggingface_hub import InferenceClient
+import streamlit as st
+
 if st.button("Generate Runbook"):
     if user_confirmation:
-        # Use Hugging Face API for model inference
-        hf = huggingface_hub.InferenceClient(
-            repo_id="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model repository ID
+        # Use Hugging Face InferenceClient for model inference
+        client = InferenceClient(
+            provider="hf-inference",  # Specify the inference provider
             api_key=hf_api_key,  # Use the API key from the environment variable
         )
-        response = hf.text_generation(
-            prompt=prompt,
-            max_new_tokens=1500,
-            temperature=0.5,
+        
+        # Define the prompt as a "chat" message format
+        completion = client.chat.completions.create(
+            model="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model ID
+            messages=[  # Pass a message format similar to a conversation
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=1500,  # Set the max tokens
+            temperature=0.5,  # Control the randomness of the output
         )
         
-        # Print the response to debug
-        st.write("Response from Hugging Face:", response)
-        
-        # Check if response is a string or dictionary/list of dictionaries
-        if isinstance(response, str):
-            output = response  # If it's a string, directly assign it
-        elif isinstance(response, list) and isinstance(response[0], dict):
-            output = response[0]["generated_text"]  # If it's a list of dictionaries, access the first dictionary
-        else:
-            st.error("Unexpected response format.")
-            output = "Error: Unable to process response format."
+        # Get the generated text from the response
+        output = completion.choices[0].message  # Access the generated message
         
         st.success("Runbook generated successfully!")
         st.write(output)
