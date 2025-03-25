@@ -242,15 +242,27 @@ if st.button("Generate Runbook"):
     if user_confirmation:
         # Use Hugging Face API for model inference
         hf = huggingface_hub.InferenceClient(
-            model="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model name
-            api_key=hf_api_key,
+            repo_id="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model repository ID
+            api_key=hf_api_key,  # Use the API key from the environment variable
         )
         response = hf.text_generation(
             prompt=prompt,
             max_new_tokens=1500,
             temperature=0.5,
         )
-        output = response[0]["generated_text"]
+        
+        # Print the response to debug
+        st.write("Response from Hugging Face:", response)
+        
+        # Check if response is a string or dictionary/list of dictionaries
+        if isinstance(response, str):
+            output = response  # If it's a string, directly assign it
+        elif isinstance(response, list) and isinstance(response[0], dict):
+            output = response[0]["generated_text"]  # If it's a list of dictionaries, access the first dictionary
+        else:
+            st.error("Unexpected response format.")
+            output = "Error: Unable to process response format."
+        
         st.success("Runbook generated successfully!")
         st.write(output)
     else:
