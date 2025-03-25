@@ -263,8 +263,15 @@ if st.button("Generate Runbook"):
         # Get the generated text from the response
         output = completion.choices[0].message  # Access the generated message
         
+        # Convert `output` to string if it's not already a string
+        if isinstance(output, str):
+            output_text = output
+        else:
+            # If output is an object, extract its string representation
+            output_text = str(output)  # You can also try accessing specific attributes if needed
+        
         st.success("Runbook generated successfully!")
-        st.write(output)
+        st.write(output_text)
 
         # Create a PDF from the output text
         pdf = FPDF()
@@ -273,7 +280,7 @@ if st.button("Generate Runbook"):
         pdf.set_font("Arial", size=12)
         
         # Add the output text to the PDF
-        pdf.multi_cell(0, 10, output)
+        pdf.multi_cell(0, 10, output_text)
 
         # Save PDF to a BytesIO object to provide as a download
         pdf_output = io.BytesIO()
