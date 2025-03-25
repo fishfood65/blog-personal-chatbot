@@ -9,3 +9,4 @@ accelerate
 watchdog
 tqdm
 PyPDF2
+fpdf
