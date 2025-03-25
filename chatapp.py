@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import PyPDF2
 from datetime import datetime, timedelta
+from fpdf import FPDF
 
 st.title("🐾 Pet Sitting Runbook Generator with HuggingFace")
 
@@ -264,5 +265,27 @@ if st.button("Generate Runbook"):
         
         st.success("Runbook generated successfully!")
         st.write(output)
+
+        # Create a PDF from the output text
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.set_font("Arial", size=12)
+        
+        # Add the output text to the PDF
+        pdf.multi_cell(0, 10, output)
+
+        # Save PDF to a BytesIO object to provide as a download
+        pdf_output = io.BytesIO()
+        pdf.output(pdf_output)
+        pdf_output.seek(0)  # Move to the beginning of the PDF
+        
+        # Provide a download button for the PDF
+        st.download_button(
+            label="Download Runbook as PDF",
+            data=pdf_output,
+            file_name="runbook.pdf",
+            mime="application/pdf"
+        )
     else:
         st.warning("Please confirm the AI prompt before generating the runbook.")
