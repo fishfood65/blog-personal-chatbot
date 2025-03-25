@@ -245,7 +245,7 @@ if st.button("Generate Runbook"):
             model="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model name
             api_key=hf_api_key,
         )
-        reponse = hf.text_generation(
+        response = hf.text_generation(
             prompt=prompt,
             max_new_tokens=1500,
             temperature=0.5,
