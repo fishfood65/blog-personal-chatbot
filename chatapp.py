@@ -1,6 +1,6 @@
-from huggingface_hub import InferenceClient
+from mistralai import Mistral
 import streamlit as st
-from langchain_huggingface import HuggingFaceEndpoint
+#from langchain_huggingface import HuggingFaceEndpoint
 import os
 import pandas as pd
 import PyPDF2
@@ -8,10 +8,10 @@ from datetime import datetime, timedelta
 from fpdf import FPDF
 import io
 
-st.title("🐾 Pet Sitting Runbook Generator with HuggingFace")
+st.title("🐾 Pet Sitting Runbook Generator with Mistral")
 
-# Get the HuggingFace API key from environment variable
-hf_api_key = os.getenv("HF_TOKEN")
+# Get the Mistral API key from environment variable
+api_key = os.getenv("MISTRAL_TOKEN")
 
 # Sidebar to display the GitHub info
 with st.sidebar:
@@ -240,20 +240,16 @@ with st.expander("AI Prompt Preview"):
 st.subheader("Runbook Creation")
 st.write ("Click the button to generate your persoanlized Runbook")
 
-from huggingface_hub import InferenceClient
 import streamlit as st
 
 if st.button("Generate Runbook"):
     if user_confirmation:
-        # Use Hugging Face InferenceClient for model inference
-        client = InferenceClient(
-            provider="hf-inference",  # Specify the inference provider
-            api_key=hf_api_key,  # Use the API key from the environment variable
-        )
+        # Use Mistral for model inference
+        client = Mistral(api_key=api_key)
         
         # Define the prompt as a "chat" message format
         completion = client.chat.completions.create(
-            model="mistralai/Mistral-Nemo-Instruct-2407",  # Specify the model ID
+            model="open-mistral-nemo",  # Specify the model ID
             messages=[  # Pass a message format similar to a conversation
                 {"role": "user", "content": prompt}
             ],
