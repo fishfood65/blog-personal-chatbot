@@ -13,6 +13,11 @@ st.title("🐾 Pet Sitting Runbook Generator with Mistral")
 # Get the Mistral API key from environment variable
 api_key = os.getenv("MISTRAL_TOKEN")
 
+if api_key:
+    print("API key successfully loaded.")
+else:
+    print("API key is not set.")
+
 # Sidebar to display the GitHub info
 with st.sidebar:
     "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/1_File_Q%26A.py)"
