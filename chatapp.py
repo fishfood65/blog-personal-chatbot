@@ -14,9 +14,9 @@ st.title("🐾 Pet Sitting Runbook Generator with Mistral")
 api_key = os.getenv("MISTRAL_TOKEN")
 
 if api_key:
-    print("API key successfully loaded.")
+    st.success("API key successfully loaded.")
 else:
-    print("API key is not set.")
+   st.error("API key is not set.")
 
 # Sidebar to display the GitHub info
 with st.sidebar:
