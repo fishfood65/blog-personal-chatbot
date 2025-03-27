@@ -248,7 +248,7 @@ if st.button("Generate Runbook"):
         client = Mistral(api_key=api_key)
         
         # Define the prompt as a "chat" message format
-        completion = client.chat.completions.create(
+        completion = client.chat.complete(
             model="open-mistral-nemo",  # Specify the model ID
             messages=[  # Pass a message format similar to a conversation
                 {"role": "user", "content": prompt}
