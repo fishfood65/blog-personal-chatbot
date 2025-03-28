@@ -283,8 +283,11 @@ if st.button("Generate Runbook"):
         doc = Document()
         doc.add_heading('Pet Sitting Runbook', 0)
         
-        # Add the output text to the DOCX
-        doc.add_paragraph(output_text)
+        # Process and add formatted output to the document
+        # Example: preserve line breaks and formatting in output
+        formatted_output = process_output_for_formatting(output)
+        doc.add_paragraph(formatted_output)
+    
 
         # Save DOCX to a temporary file
         doc_filename = "runbook.docx"
@@ -300,3 +303,18 @@ if st.button("Generate Runbook"):
             )
     else:
         st.warning("Please confirm the AI prompt before generating the runbook.")
+
+# Function to process the output for formatting (e.g., apply bold, italics, headings)
+def process_output_for_formatting(output):
+    # Example processing: bold headings or text wrapped in markdown-style asterisks
+    formatted_text = ""
+    # Replace markdown-like headings (e.g., ## Heading) with docx headings
+    formatted_text = re.sub(r"^## (.*)", r"\n\n\1\n", output)
+    
+    # Replace markdown-like bold (e.g., **bold**)
+    formatted_text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", formatted_text)
+    
+    # Replace markdown-like italics (e.g., *italic*)
+    formatted_text = re.sub(r"\*(.*?)\*", r"<i>\1</i>", formatted_text)
+    
+    return formatted_text
