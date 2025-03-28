@@ -22,6 +22,13 @@ if api_key:
 else:
    st.error("API key is not set.")
 
+   # Display environment variables in the Streamlit app
+st.title("Environment Variables")
+
+# Display all environment variables
+env_vars = "\n".join([f"{key}: {value}" for key, value in os.environ.items()])
+st.text(env_vars)
+
 # Sidebar to display the GitHub info
 with st.sidebar:
     "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/1_File_Q%26A.py)"
