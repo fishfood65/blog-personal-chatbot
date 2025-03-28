@@ -278,26 +278,24 @@ if st.button("Generate Runbook"):
         st.success("Runbook generated successfully!")
         st.write(output_text)
 
-        # Create a PDF from the output text
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_auto_page_break(auto=True, margin=15)
-        pdf.set_font("Arial", size=12)
+        # Create a DOCX file from the output text
+        doc = Document()
+        doc.add_heading('Pet Sitting Runbook', 0)
         
-        # Add the output text to the PDF
-        pdf.multi_cell(0, 10, output_text)
+        # Add the output text to the DOCX
+        doc.add_paragraph(output_text)
 
-        # Save PDF to a BytesIO object to provide as a download
-        pdf_output = io.BytesIO()
-        pdf.output(pdf_output)
-        pdf_output.seek(0)  # Move to the beginning of the PDF
-        
-        # Provide a download button for the PDF
-        st.download_button(
-            label="Download Runbook as PDF",
-            data=pdf_output.getvalue(), #Pass the content of the PDF
-            file_name="runbook.pdf",
-            mime="application/pdf"
-        )
+        # Save DOCX to a temporary file
+        doc_filename = "runbook.docx"
+        doc.save(doc_filename)
+
+        # Provide a download button for the DOCX file
+        with open(doc_filename, "rb") as doc_file:
+            st.download_button(
+                label="Download Runbook as DOCX",
+                data=doc_file,
+                file_name=doc_filename,
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
     else:
         st.warning("Please confirm the AI prompt before generating the runbook.")
