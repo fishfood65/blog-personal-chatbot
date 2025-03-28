@@ -279,8 +279,8 @@ if st.button("Generate Runbook"):
             temperature=0.5,  # Control the randomness of the output
         )
         
-        # Get the generated text from the response
-        output = completion.choices[0].message["content"]  # Access the generated message
+        # Access the content from the 'AssistantMessage' object using the .content attribute
+        output = completion.choices[0].message.content # Access the generated message
         
         # Convert `output` to string if it's not already a string
         if isinstance(output, str):
