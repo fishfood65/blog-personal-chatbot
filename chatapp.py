@@ -249,7 +249,20 @@ with st.expander("AI Prompt Preview"):
 st.subheader("Runbook Creation")
 st.write ("Click the button to generate your persoanlized Runbook")
 
-import streamlit as st
+# Function to process the output for formatting (e.g., apply bold, italics, headings)
+def process_output_for_formatting(output):
+    # Example processing: bold headings or text wrapped in markdown-style asterisks
+    formatted_text = ""
+    # Replace markdown-like headings (e.g., ## Heading) with docx headings
+    formatted_text = re.sub(r"^## (.*)", r"\n\n\1\n", output)
+    
+    # Replace markdown-like bold (e.g., **bold**)
+    formatted_text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", formatted_text)
+    
+    # Replace markdown-like italics (e.g., *italic*)
+    formatted_text = re.sub(r"\*(.*?)\*", r"<i>\1</i>", formatted_text)
+    
+    return formatted_text
 
 if st.button("Generate Runbook"):
     if user_confirmation:
@@ -303,18 +316,3 @@ if st.button("Generate Runbook"):
             )
     else:
         st.warning("Please confirm the AI prompt before generating the runbook.")
-
-# Function to process the output for formatting (e.g., apply bold, italics, headings)
-def process_output_for_formatting(output):
-    # Example processing: bold headings or text wrapped in markdown-style asterisks
-    formatted_text = ""
-    # Replace markdown-like headings (e.g., ## Heading) with docx headings
-    formatted_text = re.sub(r"^## (.*)", r"\n\n\1\n", output)
-    
-    # Replace markdown-like bold (e.g., **bold**)
-    formatted_text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", formatted_text)
-    
-    # Replace markdown-like italics (e.g., *italic*)
-    formatted_text = re.sub(r"\*(.*?)\*", r"<i>\1</i>", formatted_text)
-    
-    return formatted_text
