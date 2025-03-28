@@ -295,7 +295,7 @@ if st.button("Generate Runbook"):
         # Provide a download button for the PDF
         st.download_button(
             label="Download Runbook as PDF",
-            data=pdf_output,
+            data=pdf_output.getvalue(), #Pass the content of the PDF
             file_name="runbook.pdf",
             mime="application/pdf"
         )
