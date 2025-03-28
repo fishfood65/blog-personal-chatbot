@@ -7,7 +7,7 @@ import PyPDF2
 from datetime import datetime, timedelta
 from fpdf import FPDF
 from docx import Document
-import io
+import re
 
 st.title("🐾 Pet Sitting Runbook Generator with Mistral")
 
