@@ -13,6 +13,9 @@ st.title("🐾 Pet Sitting Runbook Generator with Mistral")
 # Get the Mistral API key from environment variable
 api_key = os.getenv("MISTRAL_TOKEN")
 
+if not api_key:
+    api_key = st.text_input("Enter your Mistral API key:", type="password")
+
 if api_key:
     st.success("API key successfully loaded.")
 else:
