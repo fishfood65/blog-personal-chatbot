@@ -280,7 +280,7 @@ if st.button("Generate Runbook"):
         )
         
         # Get the generated text from the response
-        output = completion.choices[0].message  # Access the generated message
+        output = completion.choices[0].message["content"]  # Access the generated message
         
         # Convert `output` to string if it's not already a string
         if isinstance(output, str):
